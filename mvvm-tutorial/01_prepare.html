@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<ul id="fragmentTest">
+	<li>Hi</li>
+	<li>Hi</li>
+	<li>Hi</li>
+	<li>Hi</li>
+</ul>
+
+<script>
+	// 准备工作
+	// 1. [].slice.call(lis): 将伪数组转变为真数组，以使用到真数组的方法
+	const lis = document.getElementsByTagName('li');    // lis是伪数组
+	console.log(lis instanceof Array, lis[0].innerHTML, lis.forEach);
+	const lis2 = Array.prototype.slice.call(lis);
+	// const lis2 = [].slice.call(lis);         // 或者
+	console.log(lis2 instanceof Array, lis2[0].innerHTML, lis2.forEach);
+
+	// 2. node.nodeType 得到节点类型
+	// 最大的节点: document -> element -> (attr / text)
+	const elementNode = document.getElementById('test');
+	// const attrNode = elementNode.getAttributeNode('id');
+	// const textNode = elementNode.firstChild;
+	// console.log(elementNode.nodeType, attrNode.nodeType, textNode.nodeType);
+	// 在写库的时候 需要判断一下传入的节点类型
+
+	// 3. Object.defineProperty(obj, propertyName, {}) 给对象添加属性 -- 指定描述符
+	const obj = {
+	    firstName: 'A',
+		lastName: 'B'
+	};
+	// 给obj添加fullName属性 要求自动同步 类似于计算属性 但是利用了原始的语法
+	/*
+		以下称为属性描述符
+		数据描述符
+			configurable 是否可以重新定义
+			enumerable 是否可以枚举
+			value 初始值
+			writable 是否可以修改属性值
+		访问描述符
+			get -- 回调函数 动态计算得到当前属性值
+			set -- 回调函数 监视当前属性值的变化，更改其相关的属性值
+	 */
+	Object.defineProperty(obj, 'fullName', {
+		get() {
+		    return this.firstName + '-' + this.lastName;
+        },
+		set(v) {
+		    const names = v.split('-');
+		    this.firstName = names[0];
+		    this.lastName = names[1];
+        }
+    });
+
+	console.log(obj.fullName);  // A-B
+	obj.firstName = 'C';
+	obj.lastName = 'D';
+    console.log(obj.fullName);  // C-D
+
+	// --
+	Object.defineProperty(obj, 'fullName2', {
+	    configurable: false,
+		enumerable: true
+	})
+	// 不能冲定义的意思是不可以再次使用defineProperty方法对其重新定义
+	// writable的意思是不可以对其值重写
+
+	// 4. Object.keys(obj) 得到对象自身可枚举属性组成的数组
+	const names = Object.keys(obj);
+	console.log(names);
+
+	// 5. obj.hasOwnProperty(prop)
+	console.log(obj.hasOwnProperty('fullName'), obj.hasOwnProperty('toString'));    // true false
+
+	// 6. DocumentFragment: 文档碎片 高效批量更新多个节点
+	// document 对应显示的页面 包含n个element 一旦更新document内部的某个元素 界面更新
+	// documentFragment 页面中保存n个element的元素节点 更新其中某个元素后界面不更新
+	// 使用documentFragment更新页面 多个节点更新完毕后 页面才会最后完成更新 只刷新一次
+
+	// 测试
+	const ul = document.getElementById('fragmentTest');
+	// 1. 创建fragment
+	const fragment = document.createDocumentFragment();
+	// 2. 取出ul中所有子节点保存到fragment
+	let child;
+	while (child = ul.firstChild) {
+	    // 一个节点只能有一个父亲
+		// 将child放到fragment后 就将child从ul中移除了
+	    fragment.appendChild(child);    // 先将child 从ul中移除 再添加到fragment中
+	}
+
+	// 3. 更新fragment中li的文本
+	Array.prototype.slice.call(fragment.childNodes).forEach(node => {
+	    if (node.nodeType === Node.ELEMENT_NODE) {
+	        node.textContent = 'atguigu';
+	    }
+	})
+	// 4. 将fragment插入ul
+	// 插入后即实现批量更新
+	ul.appendChild(fragment);   // fragment 也是一种Node
+
+</script>
+</body>
+</html>

@@ -33,7 +33,8 @@ Compile.prototype = {
 
         [].slice.call(childNodes).forEach(function(node) {
             var text = node.textContent;
-            var reg = /\{\{(.*)\}\}/;
+            // (.*) 小括号：值匹配 匹配到的内容会保存到RegExp.$1 $2 $3....中
+            var reg = /\{\{(.*)\}\}/;   // {{ name }}
 
             if (me.isElementNode(node)) {
                 me.compile(node);

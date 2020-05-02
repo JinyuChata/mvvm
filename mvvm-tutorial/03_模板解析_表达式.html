@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+	<p id="test">{{ name }}</p>
+
+<script src="../js/mvvm.js"></script>
+<script src="../js/watcher.js"></script>
+<script src="../js/observer.js"></script>
+<script src="../js/compile.js"></script>
+<script>
+    const vm = new MVVM({
+        el: '#test',
+        data: {
+            name: 'zhu'
+        }
+    });
+	// 为什么name可以显示到html中的p标签内？
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<div id="test"></div>
+
+<script src="js/vue.js"></script>
+<script>
+    /**
+     * 1. 数据代理: 通过一个对象代理另一个对象的读写
+     * 以下是Vue中的实现效果
+     */
+	const vm = new Vue({
+		el: '#test',
+		data: {
+		    name: 'zhu'
+		}
+	});
+
+	console.log(vm.name);   // vm 代理对data的读操作
+	console.log(vm);        // vm 代理对data的写操作
+
+	vm.name = 'xiaoxiao';
+	console.log(vm._data.name);
+	console.log(vm.name);
+</script>
+</body>
+</html>
