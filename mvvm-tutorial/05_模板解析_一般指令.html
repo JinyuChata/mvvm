@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<style>
+		.myClass {
+			color: red;
+		}
+	</style>
+</head>
+<body>
+<div id="test">
+	<p>{{ name }}</p>
+	<p v-text="msg"></p>
+	<p v-html="msg"></p>
+	<p v-class="myClass">元宵快乐</p>
+</div>
+
+<script src="../js/mvvm.js"></script>
+<script src="../js/watcher.js"></script>
+<script src="../js/observer.js"></script>
+<script src="../js/compile.js"></script>
+<script>
+    const vm = new MVVM({
+        el: '#test',
+        data: {
+            name: 'zhu',
+	        msg: '<a href="http://www.baidu.com">baidu</a>',
+	        myClass: 'myClass'
+        },
+	    methods: {
+            show() {
+                alert(this.name);
+            }
+	    }
+    });
+    // 为什么name可以显示到html中的p标签内？
+</script>
+</body>
+</html>

@@ -1,8 +1,13 @@
+/**
+ * Watcher
+ * - 在解析大括号表达式/一般指令(非事件指令)时创建
+ * - 个数 与模板中表达式(不包含时间指令) 一一对应
+ */
 function Watcher(vm, expOrFn, cb) {
-    this.cb = cb;
+    this.cb = cb;   // 更新界面的回调函数 callback
     this.vm = vm;
-    this.expOrFn = expOrFn;
-    this.depIds = {};
+    this.expOrFn = expOrFn; // 对应的表达式(或函数)
+    this.depIds = {};   // 相关的n个dep的容器对象
 
     if (typeof expOrFn === 'function') {
         this.getter = expOrFn;

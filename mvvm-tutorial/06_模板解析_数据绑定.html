@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<div id="test">
+	<p>{{ name }}</p>
+	<button v-on:click="update">更新</button>
+</div>
+
+<script src="../js/mvvm.js"></script>
+<script src="../js/watcher.js"></script>
+<script src="../js/observer.js"></script>
+<script src="../js/compile.js"></script>
+<script>
+    /**
+     * 数据绑定 一旦更新了data中的某个属性数据，所有界面上直接或间接调用此属性的节点都会被更新
+     * - 直接调用 {{ someDate }}
+     * - 间接调用 调用某个计算属性
+     *
+     * 数据绑定的实现：数据劫持实现数据绑定的效果
+     * - 数据劫持是vue用于实现数据绑定的技术
+     * - 基本思想：通过defineProperty来监视data中的所有属性(任意层次)数据的变化 变化后更新界面
+     *   data.xxx = yyy
+     *   -> vm.xxx.set先知道
+     *   -> 知道后通知data.xxx.set
+     *   -> data.xxx.set去改变页面
+     * - 即：vm.xxx.set 实现数据代理 而vm.data.xxx.set 实现动态绑定
+     *
+     * 顺序：
+     * vm.xxx = yyy -> vm.data.xxx 发生改变 -> dep.notify() 通知调用者watcher
+     *
+     * 什么关系？
+     *  - 多对多关系
+     *  - data属性 ---> Dep ---> n个watcher (属性在模板中被多次使用)
+     *  - 表达式 ---> watcher ---> n个Dep (多层表达式 a.b.c)
+     * @type {MVVM}
+     */
+    const vm = new MVVM({
+        el: '#test',
+        data: {
+            name: 'zhu',
+	        wife: {
+                name: 'qiu',
+		        age: 20
+	        }
+        },
+	    methods: {
+            update() {
+                this.name = 'xinxin';
+            }
+	    }
+    });
+    // 为什么name可以显示到html中的p标签内？
+</script>
+</body>
+</html>
